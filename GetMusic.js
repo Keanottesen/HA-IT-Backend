@@ -14,7 +14,11 @@ for (var i = 0; i < artists.length; i++) {
       }
       })
       .then((response)=>{
-        console.log(response.data)
+        const artistInfo = response.data
+
+        for (var i = 0; i < artistInfo.length; i++) {
+          artistInfo[i]
+        }
       })
       .catch((error)=>{
         console.log(error)

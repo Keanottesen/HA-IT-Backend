@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('songs', {
+    return queryInterface.createTable('Songs', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -29,7 +29,7 @@ module.exports = {
       album_id: {
         type: Sequelize.STRING
       },
-      artist_is: {
+      artist_id: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -43,6 +43,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('songs');
+    return queryInterface.dropTable('Songs');
   }
 };

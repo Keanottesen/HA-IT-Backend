@@ -1,9 +1,9 @@
-const userController = require('../app/controllers').User;
+// This will be our application entry. We'll setup our server here.
+const http = require('http');
+const app = require('../app'); // The express app we just created
 
-module.exports = (app) => {
-  app.get('/api', (req, res) => res.status(200).send({
-    message: 'Welcome to the Todos API!',
-  }));
+const port = parseInt(process.env.PORT, 10) || 8000;
+app.set('port', port);
 
-  app.post('/api/user', userController.create);
-};
+const server = http.createServer(app);
+server.listen(port);

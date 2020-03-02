@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     tracklist: DataTypes.STRING,
     contributors: DataTypes.JSON,
     album_id: DataTypes.STRING,
-    artist_is: DataTypes.STRING
+    artist_id: DataTypes.STRING
   }, {});
   Song.associate = function(models) {
     Song.belongsTo(models.Album, {
@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       as: 'album'
     });
     Song.belongsTo(models.Artist, {
-      foreignKey: 'artist_is',
+      foreignKey: 'artist_id',
       as: 'artist'
     });
   };

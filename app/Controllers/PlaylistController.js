@@ -1,19 +1,39 @@
 'use strict'
 const Playlist = require('../models').Playlist;
-const User = require('../models').User;
+const db = require('../models');
 const { Op } = require("sequelize");
 
 module.exports = {
 
   show(req, res) {
-   return Playlist
-     .findOne({
-       where: {
-          id: req.query.playlist_id,
-         }
-       })
-     .then((playlist) => res.status(200).send(playlist))
-     .catch((error) => res.status(400).send(error));
+    return db.sequelize.query('select * from "Playlists" inner join "PlaylistSongs" on "playlist_id" = "Playlists"."id" inner join "Songs" on "Songs"."id" = song_id where "Playlists"."id" = (:id)', {
+      replacements: {id: req.query.playlist_id},
+      type: db.sequelize.QueryTypes.SELECT
+    })
+    .then((playlist) => {
+      const playlistId = playlist[0].playlist_id
+      const playlistName = playlist[0].name
+      const nbTracks = playlist.length
+
+      const songs = playlist.map(x => {
+        const artist = x.contributors.map(y => y.name)
+        return {
+          songId: x.id,
+          songTitle: x.title,
+          duration: x.duration,
+          preview: x.preview,
+          artists: artist
+        }
+      })
+
+      res.status(200).send({
+        playlistId: playlistId,
+        playlistName: playlistName,
+        nbTracks: nbTracks,
+        songs: songs
+      })
+    })
+    .catch((error) => res.status(400).send(error));
  },
 
   list(req, res) {
@@ -85,7 +105,4 @@ module.exports = {
 //     })
 //     .catch(error => res.status(400).send(error));
 // },
-
-
-
 };

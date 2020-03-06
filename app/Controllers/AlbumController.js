@@ -1,89 +1,44 @@
 'use strict'
+const Album = require('../models').Album;
+const { Op } = require("sequelize");
 
-/**
- * Resourceful controller for interacting with albums
- */
-class Album {
-  /**
-   * Show a list of all albums.
-   * GET albums
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async index ({ request, response, view }) {
-  }
+module.exports = {
 
-  /**
-   * Render a form to be used for creating a new album.
-   * GET albums/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
-  }
+  show(req, res) {
+   return Album
+     .findOne({
+       where: {
+          id: req.query.album_id,
+         }
+       })
+     .then((album) => res.status(200).send(album))
+     .catch((error) => res.status(400).send(error));
+ },
 
-  /**
-   * Create/save a new album.
-   * POST albums
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async store ({ request, response }) {
-  }
+ listByArtist(req, res) {
+  return Album
+    .findAll({
+        where: {
+          artist_id: req.query.artist_id
+        }
+      })
+    .then((albums) => res.status(200).send(albums))
+    .catch((error) => res.status(400).send(error));
+},
 
-  /**
-   * Display a single album.
-   * GET albums/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show ({ params, request, response, view }) {
-  }
+list(req, res) {
+ return Album
+   .findAll({
+       where: {
+         title: {
+           [Op.iLike]: '%' + req.query.q + '%'
+         }
+       }
+     })
+   .then((albums) => res.status(200).send(albums))
+   .catch((error) => res.status(400).send(error));
+},
 
-  /**
-   * Render a form to update an existing album.
-   * GET albums/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
-  }
 
-  /**
-   * Update album details.
-   * PUT or PATCH albums/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async update ({ params, request, response }) {
-  }
 
-  /**
-   * Delete a album with id.
-   * DELETE albums/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async destroy ({ params, request, response }) {
-  }
-}
-
-module.exports = Album
+};

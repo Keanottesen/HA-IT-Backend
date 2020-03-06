@@ -13,6 +13,7 @@ module.exports = (app) => {
 
    app.get('/api/user', UserController.show);
    app.post('/api/createUser', UserController.create);
+   app.post('/api/validateUser', UserController.validate);
    //change to put
    app.post('/api/updateUser', UserController.update);
 
@@ -23,6 +24,22 @@ module.exports = (app) => {
    app.put('/api/updatePlaylist/:playlist_id', PlaylistController.update);
    // app.delete('/api/deletePlaylist', PlaylistController.destroy);
 
+   app.post('/api/createPlaylistSong', PlaylistSongController.create);
+   app.put('/api/deletePlaylistSong', PlaylistSongController.update);
 
-   
+
+   app.get('/api/artist', ArtistController.show);
+   app.get('/api/queryArtist', ArtistController.list);
+
+   app.get('/api/album', AlbumController.show);
+   app.get('/api/artistAlbums', AlbumController.listByArtist);
+   app.get('/api/queryAlbum', AlbumController.list);
+
+   app.get('/api/song', SongController.show);
+   app.get('/api/albumSongs', SongController.listByAlbum);
+   app.get('/api/querySong', SongController.list);
+
+   app.post('/api/createCurrentSong', CurrentSongController.create);
+   app.put('/api/updateCurrentSong/:id', CurrentSongController.update);
+
 };

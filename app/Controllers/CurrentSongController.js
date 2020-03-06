@@ -1,89 +1,34 @@
 'use strict'
+const CurrentSong = require('../models').CurrentSong;
+const { Op } = require("sequelize");
 
-/**
- * Resourceful controller for interacting with current_songs
- */
-class CurrentSong {
-  /**
-   * Show a list of all current_songs.
-   * GET current_songs
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async index ({ request, response, view }) {
-  }
+module.exports = {
 
-  /**
-   * Render a form to be used for creating a new current_song.
-   * GET current_songs/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
-  }
+  create(req, res) {
+    return CurrentSong
+      .create({
+        song_id: req.body.song_id,
+        user_id: req.body.user_id
+      })
+      .then(currentSong => res.status(201).send(currentSong))
+      .catch(error => res.status(400).send(error));
+  },
 
-  /**
-   * Create/save a new current_song.
-   * POST current_songs
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async store ({ request, response }) {
-  }
-
-  /**
-   * Display a single current_song.
-   * GET current_songs/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show ({ params, request, response, view }) {
-  }
-
-  /**
-   * Render a form to update an existing current_song.
-   * GET current_songs/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
-  }
-
-  /**
-   * Update current_song details.
-   * PUT or PATCH current_songs/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async update ({ params, request, response }) {
-  }
-
-  /**
-   * Delete a current_song with id.
-   * DELETE current_songs/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async destroy ({ params, request, response }) {
-  }
-}
-
-module.exports = CurrentSong
+  update(req, res) {
+  return CurrentSong
+    .findOne({
+      where: {
+        id: req.params.id,
+      },
+    })
+    .then(currentSong => {
+      return currentSong
+        .update({
+          finished_at: req.body.finished_at
+        })
+        .then(currentSong => res.status(200).send(currentSong))
+        .catch(error => res.status(400).send(error));
+    })
+    .catch(error => res.status(400).send(error));
+},
+};

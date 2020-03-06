@@ -1,89 +1,33 @@
 'use strict'
+const Artist = require('../models').Artist;
+const { Op } = require("sequelize");
 
-/**
- * Resourceful controller for interacting with artists
- */
-class Artist {
-  /**
-   * Show a list of all artists.
-   * GET artists
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async index ({ request, response, view }) {
-  }
+module.exports = {
 
-  /**
-   * Render a form to be used for creating a new artist.
-   * GET artists/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
-  }
+  show(req, res) {
+   return Artist
+     .findOne({
+       where: {
+          id: req.query.artist_id,
+         }
+       })
+     .then((artist) => res.status(200).send(artist))
+     .catch((error) => res.status(400).send(error));
+ },
 
-  /**
-   * Create/save a new artist.
-   * POST artists
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async store ({ request, response }) {
-  }
+ list(req, res) {
+  return Artist
+    .findAll({
+        where: {
+          name: {
+            [Op.iLike]: '%' + req.query.q + '%'
+          }
+        }
+      })
+    .then((artists) => res.status(200).send(artists))
+    .catch((error) => res.status(400).send(error));
+},
 
-  /**
-   * Display a single artist.
-   * GET artists/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show ({ params, request, response, view }) {
-  }
 
-  /**
-   * Render a form to update an existing artist.
-   * GET artists/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
-  }
 
-  /**
-   * Update artist details.
-   * PUT or PATCH artists/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async update ({ params, request, response }) {
-  }
-
-  /**
-   * Delete a artist with id.
-   * DELETE artists/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async destroy ({ params, request, response }) {
-  }
-}
-
-module.exports = Artist
+};

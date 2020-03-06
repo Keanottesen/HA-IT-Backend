@@ -1,89 +1,44 @@
 'use strict'
+const Song = require('../models').Song;
+const { Op } = require("sequelize");
 
-/**
- * Resourceful controller for interacting with songs
- */
-class Song {
-  /**
-   * Show a list of all songs.
-   * GET songs
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async index ({ request, response, view }) {
-  }
+module.exports = {
 
-  /**
-   * Render a form to be used for creating a new song.
-   * GET songs/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
-  }
+  show(req, res) {
+   return Song
+     .findOne({
+       where: {
+          id: req.query.song_id,
+         }
+       })
+     .then((song) => res.status(200).send(song))
+     .catch((error) => res.status(400).send(error));
+ },
 
-  /**
-   * Create/save a new song.
-   * POST songs
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async store ({ request, response }) {
-  }
+ listByAlbum(req, res) {
+  return Song
+    .findAll({
+        where: {
+          album_id: req.query.album_id
+        }
+      })
+    .then((songs) => res.status(200).send(songs))
+    .catch((error) => res.status(400).send(error));
+},
 
-  /**
-   * Display a single song.
-   * GET songs/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show ({ params, request, response, view }) {
-  }
+list(req, res) {
+ return Song
+   .findAll({
+       where: {
+         title: {
+           [Op.iLike]: '%' + req.query.q + '%'
+         }
+       }
+     })
+   .then((songs) => res.status(200).send(songs))
+   .catch((error) => res.status(400).send(error));
+},
 
-  /**
-   * Render a form to update an existing song.
-   * GET songs/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
-  }
 
-  /**
-   * Update song details.
-   * PUT or PATCH songs/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async update ({ params, request, response }) {
-  }
 
-  /**
-   * Delete a song with id.
-   * DELETE songs/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async destroy ({ params, request, response }) {
-  }
-}
-
-module.exports = Song
+};

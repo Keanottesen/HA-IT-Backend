@@ -1,5 +1,6 @@
 'use strict'
 const User = require('../models').User;
+var passwordHash = require('password-hash');
 
 module.exports = {
 
@@ -22,10 +23,27 @@ module.exports = {
         last_name: req.body.last_name,
         username: req.body.username,
         email: req.body.email,
-        password: req.body.password,
+        password: passwordHash.generate(req.body.password),
         active: 1
       })
       .then(user => res.status(201).send(user))
+      .catch(error => res.status(400).send(error));
+  },
+
+  validate(req, res) {
+    return User
+      .findOne({
+        where: {
+          email: req.body.email
+        },
+      })
+      .then(user => {
+          if (passwordHash.verify(req.body.password, user.password)) {
+            return res.status(200).send(user)
+          } else {
+            return res.status(401).send('Unauthorized')
+          }
+      })
       .catch(error => res.status(400).send(error));
   },
 

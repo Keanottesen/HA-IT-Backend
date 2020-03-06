@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'owner_user_id',
       as: 'user'
     });
+    Playlist.hasMany(models.PlaylistSong, {
+    foreignKey: 'playlist_id',
+    as: 'songs'
+    });
   };
   return Playlist;
 };

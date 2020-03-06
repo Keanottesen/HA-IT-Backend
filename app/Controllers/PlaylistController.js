@@ -1,89 +1,91 @@
 'use strict'
+const Playlist = require('../models').Playlist;
+const User = require('../models').User;
+const { Op } = require("sequelize");
 
-/**
- * Resourceful controller for interacting with playlists
- */
-class Playlist {
-  /**
-   * Show a list of all playlists.
-   * GET playlists
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async index ({ request, response, view }) {
-  }
+module.exports = {
 
-  /**
-   * Render a form to be used for creating a new playlist.
-   * GET playlists/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
-  }
+  show(req, res) {
+   return Playlist
+     .findOne({
+       where: {
+          id: req.query.playlist_id,
+         }
+       })
+     .then((playlist) => res.status(200).send(playlist))
+     .catch((error) => res.status(400).send(error));
+ },
 
-  /**
-   * Create/save a new playlist.
-   * POST playlists
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async store ({ request, response }) {
-  }
+  list(req, res) {
+   return Playlist
+     .findAll({
+       where: {
+           [Op.and]: [
+             { owner_user_id: req.query.user_id },
+             { deleted_at: null }
+           ]
+         }
+       })
+     .then((playlists) => res.status(200).send(playlists))
+     .catch((error) => res.status(400).send(error));
+ },
 
-  /**
-   * Display a single playlist.
-   * GET playlists/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show ({ params, request, response, view }) {
-  }
+  create(req, res) {
+    return Playlist
+      .create({
+        name: req.body.name,
+        owner_user_id: req.body.owner_user_id,
+      })
+      .then(playlist => res.status(201).send(playlist))
+      .catch(error => res.status(400).send(error));
+  },
 
-  /**
-   * Render a form to update an existing playlist.
-   * GET playlists/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
-  }
+  update(req, res) {
+  return Playlist
+    .findOne({
+      where: {
+        id: req.params.playlist_id,
+      },
+    })
+    .then(playlist => {
+      if (!playlist) {
+        return res.status(404).send({
+          message: 'User Not Found',
+        });
+      }
 
-  /**
-   * Update playlist details.
-   * PUT or PATCH playlists/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async update ({ params, request, response }) {
-  }
+      return playlist
+        .update({
+          deleted_at: req.body.deleted_at || playlist.deleted_at,
+        })
+        .then(updatedPlaylist => res.status(200).send(updatedPlaylist))
+        .catch(error => res.status(400).send(error));
+    })
+    .catch(error => res.status(400).send(error));
+},
 
-  /**
-   * Delete a playlist with id.
-   * DELETE playlists/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async destroy ({ params, request, response }) {
-  }
-}
+//   destroy(req, res) {
+//   return Playlist
+//     .findOne({
+//       where: {
+//         id: req.body.playlist_id,
+//       },
+//     })
+//     .then(playlist => {
+//       if (!playlist) {
+//         return res.status(404).send({
+//           message: 'Playlist Not Found',
+//         });
+//       }
+//
+//       return playlist
+//         .destroy()
+//         .then(() => res.status(204).send())
+//         .catch(error => res.status(400).send(error));
+//     })
+//     .catch(error => res.status(400).send(error));
+// },
 
-module.exports = Playlist
+
+
+};

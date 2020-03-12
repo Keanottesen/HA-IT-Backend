@@ -14,8 +14,7 @@ module.exports = (app) => {
    app.get('/api/user', UserController.show);
    app.post('/api/createUser', UserController.create);
    app.post('/api/validateUser', UserController.validate);
-   //change to put
-   app.post('/api/updateUser', UserController.update);
+   app.put('/api/updateUser/:user_id', UserController.update);
 
 
    app.get('/api/playlist', PlaylistController.show);

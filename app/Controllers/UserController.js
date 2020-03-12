@@ -39,6 +39,10 @@ module.exports = {
       })
       .then(user => {
           if (passwordHash.verify(req.body.password, user.password)) {
+            user
+              .update({
+                active: true
+              })
             return res.status(200).send(user)
           } else {
             return res.status(401).send('Unauthorized')
@@ -51,7 +55,7 @@ module.exports = {
   return User
     .findOne({
       where: {
-        id: req.body.user_id,
+        id: req.params.user_id,
       },
     })
     .then(user => {

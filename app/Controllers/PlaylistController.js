@@ -6,14 +6,24 @@ const { Op } = require("sequelize");
 module.exports = {
 
   show(req, res) {
-    return db.sequelize.query('select * from "Playlists" inner join "PlaylistSongs" on "playlist_id" = "Playlists"."id" inner join "Songs" on "Songs"."id" = song_id where "Playlists"."id" = (:id)', {
+    return db.sequelize.query('select * from "Playlists" left join "PlaylistSongs" on "playlist_id" = "Playlists"."id" left join "Songs" on "Songs"."id" = song_id where "Playlists"."id" = (:id) and "PlaylistSongs"."deleted_at" is null', {
       replacements: {id: req.query.playlist_id},
       type: db.sequelize.QueryTypes.SELECT
     })
-    .then((playlist) => {
-      const playlistId = playlist[0].playlist_id
+    .then(playlist => {
+
       const playlistName = playlist[0].name
+      const playlistId = playlist[0].playlist_id
       const nbTracks = playlist.length
+
+      if (playlist.length == 1 && !playlistId) {
+        res.status(200).send({
+            playlistId: req.query.playlist_id,
+            playlistName: playlistName,
+            nbTracks: 0,
+            songs: null
+        })
+      }
 
       const songs = playlist.map(x => {
         const artist = x.contributors.map(y => y.name)
@@ -33,7 +43,7 @@ module.exports = {
         songs: songs
       })
     })
-    .catch((error) => res.status(400).send(error));
+    .catch(error => res.status(400).send(error));
  },
 
   list(req, res) {

@@ -1,6 +1,7 @@
 'use strict'
 const Song = require('../models').Song;
 const { Op } = require("sequelize");
+const db = require('../models');
 
 module.exports = {
 
@@ -27,16 +28,12 @@ module.exports = {
 },
 
 list(req, res) {
- return Song
-   .findAll({
-       where: {
-         title: {
-           [Op.iLike]: '%' + req.query.q + '%'
-         }
-       }
-     })
-   .then((songs) => res.status(200).send(songs))
-   .catch((error) => res.status(400).send(error));
+  return db.sequelize.query('select "Songs".*, "Albums"."cover" from "Songs" inner join "Albums" on "Songs"."album_id" = "Albums"."api_id" where lower("Songs"."title") like :q', {
+    replacements: {q: '%' + req.query.q + '%'},
+    type: db.sequelize.QueryTypes.SELECT
+  })
+  .then(songs => res.status(200).send(songs))
+  .catch(error => res.status(400).send(error));
 },
 
 

@@ -6,12 +6,11 @@ const { Op } = require("sequelize");
 module.exports = {
 
   show(req, res) {
-    return db.sequelize.query('select * from "Playlists" left join "PlaylistSongs" on "playlist_id" = "Playlists"."id" left join "Songs" on "Songs"."id" = song_id where "Playlists"."id" = (:id) and "PlaylistSongs"."deleted_at" is null', {
+    return db.sequelize.query('select "PlaylistSongs"."playlist_id", "Playlists"."name", "Songs".*, "Albums"."cover" from "Playlists" left join "PlaylistSongs" on "playlist_id" = "Playlists"."id" left join "Songs" on "Songs"."id" = song_id left join "Albums" on "Songs"."album_id" = "Albums"."api_id" where "Playlists"."id" = (:id) and "PlaylistSongs"."deleted_at" is null', {
       replacements: {id: req.query.playlist_id},
       type: db.sequelize.QueryTypes.SELECT
     })
     .then(playlist => {
-
       const playlistName = playlist[0].name
       const playlistId = playlist[0].playlist_id
       const nbTracks = playlist.length
@@ -29,10 +28,12 @@ module.exports = {
         const artist = x.contributors.map(y => y.name)
         return {
           songId: x.id,
+          songApi_id: x.api_id,
           songTitle: x.title,
           duration: x.duration,
           preview: x.preview,
-          artists: artist
+          artists: artist,
+          cover: x.cover
         }
       })
 

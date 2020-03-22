@@ -4,11 +4,13 @@ const artistsIds = require('./app//config/artistIds');
 const {Song, Artist, Album} = require('./app/models');
 var Sequelize = require('sequelize');
 
-
-async function getAllArtists() {
+(async function getAllArtists() {
  const {count: artistCount, rows: artists} = await Artist.findAndCountAll()
  const {count: songCount, rows: songs} = await Song.findAndCountAll()
  const {count: albumCount, rows: albums} = await Album.findAndCountAll()
+
+ console.log(process.env.X_RapidAPI_Key);
+ return null
 
  if (artistCount == 0) {
    for (var i = 0; i < artistsIds.length; i++) {
@@ -130,6 +132,4 @@ async function getAllArtists() {
   }
 
 
-}
-
-getAllArtists()
+})()

@@ -7,10 +7,7 @@ const PlaylistSongController = require('../app/controllers').PlaylistSongControl
 const SongController = require('../app/controllers').SongController;
 
 module.exports = (app) => {
-  app.get('/api', (req, res) => res.status(200).send({
-    message: 'Welcome to the Todos API!',
-  }));
-
+  
    app.get('/api/user', UserController.show);
    app.post('/api/createUser', UserController.create);
    app.post('/api/validateUser', UserController.validate);

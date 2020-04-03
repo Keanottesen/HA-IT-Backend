@@ -9,9 +9,6 @@ var Sequelize = require('sequelize');
  const {count: songCount, rows: songs} = await Song.findAndCountAll()
  const {count: albumCount, rows: albums} = await Album.findAndCountAll()
 
- console.log(process.env.X_RapidAPI_Key);
- return null
-
  if (artistCount == 0) {
    for (var i = 0; i < artistsIds.length; i++) {
      console.log(artistsIds[i]);

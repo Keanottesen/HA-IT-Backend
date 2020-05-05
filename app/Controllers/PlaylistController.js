@@ -71,7 +71,7 @@ module.exports = {
       .catch(error => res.status(400).send(error));
   },
 
-  update(req, res) {
+  destroy(req, res) {
   return Playlist
     .findOne({
       where: {

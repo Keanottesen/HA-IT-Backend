@@ -17,11 +17,11 @@ module.exports = (app) => {
    app.get('/api/playlist', PlaylistController.show);
    app.get('/api/userPlaylists', PlaylistController.list);
    app.post('/api/createPlaylist', PlaylistController.create);
-   app.put('/api/updatePlaylist/:playlist_id', PlaylistController.update);
+   app.delete('/api/updatePlaylist/:playlist_id', PlaylistController.destroy);
    // app.delete('/api/deletePlaylist', PlaylistController.destroy);
 
    app.post('/api/createPlaylistSong', PlaylistSongController.create);
-   app.put('/api/deletePlaylistSong', PlaylistSongController.update);
+   app.delete('/api/deletePlaylistSong', PlaylistSongController.destroy);
    // app.delete('/api/deletePlaylistSong', PlaylistSongController.destroy);
 
    app.get('/api/artist', ArtistController.show);

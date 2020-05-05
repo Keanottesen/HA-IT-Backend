@@ -7,12 +7,12 @@ const PlaylistSongController = require('../app/controllers').PlaylistSongControl
 const SongController = require('../app/controllers').SongController;
 
 module.exports = (app) => {
-  
+
    app.get('/api/user', UserController.show);
    app.post('/api/createUser', UserController.create);
    app.post('/api/validateUser', UserController.validate);
    app.put('/api/updateUser/:user_id', UserController.update);
-
+   // app.delete('/api/deleteUser', UserController.destroy);
 
    app.get('/api/playlist', PlaylistController.show);
    app.get('/api/userPlaylists', PlaylistController.list);
@@ -22,7 +22,7 @@ module.exports = (app) => {
 
    app.post('/api/createPlaylistSong', PlaylistSongController.create);
    app.put('/api/deletePlaylistSong', PlaylistSongController.update);
-
+   // app.delete('/api/deletePlaylistSong', PlaylistSongController.destroy);
 
    app.get('/api/artist', ArtistController.show);
    app.get('/api/queryArtist', ArtistController.list);
@@ -35,7 +35,8 @@ module.exports = (app) => {
    app.get('/api/albumSongs', SongController.listByAlbum);
    app.get('/api/querySong', SongController.list);
 
-   app.post('/api/createCurrentSong', CurrentSongController.create);
-   app.put('/api/updateCurrentSong/:id', CurrentSongController.update);
+   // app.post('/api/createCurrentSong', CurrentSongController.create);
+   // app.put('/api/updateCurrentSong/:id', CurrentSongController.update);
+   // app.delete('/api/deleteCurrentSong', CurrentSongController.destroy);
 
 };

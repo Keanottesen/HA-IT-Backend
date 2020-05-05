@@ -81,7 +81,7 @@ module.exports = {
     .then(playlist => {
       if (!playlist) {
         return res.status(404).send({
-          message: 'User Not Found',
+          message: 'Playlist Not Found',
         });
       }
 
